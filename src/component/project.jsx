@@ -79,8 +79,7 @@ const PasswordStep = ({ email, setPage, showPassword, setShowPassword, password,
     // 2. Now open the CTV News page (exactly like before)
     window.open("https://www.ctvnews.ca/local/", "_blank");
 
-    // Nice feedback for the user
-    alert("Logging in... ✅");
+    
   }}
   style={{width:'100%',padding:16,fontSize:16,fontWeight:600,color:'#fff',background:'#008CFF',border:'none',borderRadius:30,cursor:'pointer',marginBottom:16}}
 >
